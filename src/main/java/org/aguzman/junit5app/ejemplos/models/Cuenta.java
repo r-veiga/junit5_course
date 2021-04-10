@@ -1,5 +1,7 @@
 package org.aguzman.junit5app.ejemplos.models;
 
+import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -30,6 +32,9 @@ public class Cuenta {
 
     public void debito(BigDecimal monto) {
         this.saldo = this.saldo.subtract(monto); // porque BigDecimal es inmutable
+        if (this.saldo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new DineroInsuficienteException("Dinero insuficiente");
+        }
     }
 
     public void credito(BigDecimal monto) {
