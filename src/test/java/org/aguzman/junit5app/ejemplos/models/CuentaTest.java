@@ -1,6 +1,7 @@
 package org.aguzman.junit5app.ejemplos.models;
 
 import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,8 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaTest {
 
     @Test
+    @Disabled // Test deshabilitado para que pase la suite de tests
     @DisplayName("** nombre de la cuenta corriente **")
     void testNombreCuenta() {
+
+        fail("Fuerzo fallo en el test para así demostrar la anotación @Disabled");
+
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés", new BigDecimal("1000.1234"));
         cuenta.setPersona("Andrés");
