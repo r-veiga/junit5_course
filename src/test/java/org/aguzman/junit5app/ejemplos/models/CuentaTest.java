@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -179,6 +180,12 @@ class CuentaTest {
     }
 
     @Test
+    void imprimirEnvironmentVariables() {
+        Map<String, String> envVars = System.getenv();
+        envVars.forEach((k,v) -> System.out.println("clave = " + k + " ; valor = " + v));
+    }
+
+    @Test
     @EnabledIfEnvironmentVariable(named = "java.vm.vendor", matches = "Ubuntu")
     void testOnSystemVariable() { }
 
@@ -193,5 +200,21 @@ class CuentaTest {
     @Test
     @EnabledIfSystemProperty(named = "ENV", matches = "dev")
     void entornoDev() { }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "USERNAME", matches = "roberto")
+    void testUsarname() { }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "SHELL", matches = "/bin/bash")
+    void nuncaShellBash() { }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "VERO_ENV", matches = "dev")
+    void siempreEnvironmentDev() { }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "VERO_ENV", matches = "prod")
+    void nuncaEnvironmentProd() { }
 
 }
