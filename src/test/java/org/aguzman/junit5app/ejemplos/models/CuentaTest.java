@@ -1,15 +1,36 @@
 package org.aguzman.junit5app.ejemplos.models;
 
 import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CuentaTest {
+
+    private Cuenta cuenta;
+
+    @BeforeEach
+    void initMetodoTest() {
+        this.cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
+        System.out.println("...iniciando el método");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("finalizando el método de prueba");
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        System.out.println("¡¡¡ Inicializando el test");
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.out.println("!!! Finalizando el test");
+    }
 
     @Test
     @Disabled // Test deshabilitado para que pase la suite de tests
@@ -33,9 +54,8 @@ class CuentaTest {
     @DisplayName("** saldo de la cuenta corriente **")
     void testSaldoCuenta() {
         // GIVEN
-        Cuenta cuenta = new Cuenta("Andrés", new BigDecimal("1000.1234"));
         // THEN
-        assertEquals(1000.1234, cuenta.getSaldo().doubleValue());
+        assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
         assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
     }
 
@@ -53,7 +73,6 @@ class CuentaTest {
     @DisplayName("** débito en cuenta **")
     void testDebitoCuenta() {
         // GIVEN
-        Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
         // WHEN
         cuenta.debito(new BigDecimal(100));
         // THEN
@@ -66,7 +85,6 @@ class CuentaTest {
     @DisplayName("** crédito en cuenta **")
     void testCreditoCuenta() {
         // GIVEN
-        Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
         // WHEN
         cuenta.credito(new BigDecimal(100));
         // THEN
@@ -79,7 +97,6 @@ class CuentaTest {
     @DisplayName("** EXCEPCIÓN cuando no dinero suficiente **")
     void testDineroInsuficienteException() {
         // GIVEN
-        Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
         // WHEN - THEN
         Exception exception = assertThrows(
                 DineroInsuficienteException.class,
