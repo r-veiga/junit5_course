@@ -1,6 +1,7 @@
 package org.aguzman.junit5app.ejemplos.models;
 
 import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CuentaTest {
 
     @Test
+    @DisplayName("** nombre de la cuenta corriente **")
     void testNombreCuenta() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés", new BigDecimal("1000.1234"));
@@ -23,6 +25,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("** saldo de la cuenta corriente **")
     void testSaldoCuenta() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés", new BigDecimal("1000.1234"));
@@ -32,6 +35,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("** igualdad de cuentas **")
     void testDosCuentasIguales() {
         // GIVEN
         Cuenta cuenta1 = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
@@ -41,6 +45,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("** débito en cuenta **")
     void testDebitoCuenta() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
@@ -53,12 +58,12 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("** crédito en cuenta **")
     void testCreditoCuenta() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
         // WHEN
         cuenta.credito(new BigDecimal(100));
-        cuenta.setSaldo(null);
         // THEN
         assertNotNull(cuenta.getSaldo(), ">>> El saldo de la cuenta no puede ser null");
         assertEquals(1100, cuenta.getSaldo().intValue());
@@ -66,6 +71,7 @@ class CuentaTest {
     }
 
     @Test
+    @DisplayName("** EXCEPCIÓN cuando no dinero suficiente **")
     void testDineroInsuficienteException() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
