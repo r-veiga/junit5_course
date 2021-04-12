@@ -2,8 +2,10 @@ package org.aguzman.junit5app.ejemplos.models;
 
 import org.aguzman.junit5app.ejemplos.exceptions.DineroInsuficienteException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.*;
 
 import java.math.BigDecimal;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -145,4 +147,51 @@ class CuentaTest {
                         .isPresent())
         );
     }
+
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    void testSoloWindows() { }
+
+    @Test
+    @EnabledOnOs({OS.LINUX, OS.MAC})
+    void testSoloLinuxMac() { }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void testNoWindows() { }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_8)
+    void soloJdk8() { }
+
+    @Test
+    @EnabledOnJre(JRE.JAVA_11)
+    void soloJdk11() { }
+
+    @Test
+    @DisabledOnJre(JRE.JAVA_15)
+    void nuncaJdk15() { }
+
+    @Test
+    void imprimirSystemProperties() {
+        Properties properties = System.getProperties();
+        properties.forEach((k,v) -> System.out.println("clave = " + k + " ; valor = " + v));
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "java.vm.vendor", matches = "Ubuntu")
+    void testOnSystemVariable() { }
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "os.arch", matches = "*.32.*")
+    void nuncaArquitectura32bits() { }
+
+    @Test
+    @EnabledIfSystemProperty(named = "user.name", matches = "roberto")
+    void testUserName() { }
+
+    @Test
+    @EnabledIfSystemProperty(named = "ENV", matches = "dev")
+    void entornoDev() { }
+
 }
