@@ -151,29 +151,35 @@ class CuentaTest {
         );
     }
 
-    @Test
-    @EnabledOnOs(OS.WINDOWS)
-    void testSoloWindows() { }
+    @Nested
+    class SistemaOperativoTest {
+        @Test
+        @EnabledOnOs(OS.WINDOWS)
+        void testSoloWindows() { }
 
-    @Test
-    @EnabledOnOs({OS.LINUX, OS.MAC})
-    void testSoloLinuxMac() { }
+        @Test
+        @EnabledOnOs({OS.LINUX, OS.MAC})
+        void testSoloLinuxMac() { }
 
-    @Test
-    @DisabledOnOs(OS.WINDOWS)
-    void testNoWindows() { }
+        @Test
+        @DisabledOnOs(OS.WINDOWS)
+        void testNoWindows() { }
+    }
 
-    @Test
-    @EnabledOnJre(JRE.JAVA_8)
-    void soloJdk8() { }
+    @Nested
+    class JavaVersionTest {
+        @Test
+        @EnabledOnJre(JRE.JAVA_8)
+        void soloJdk8() { }
 
-    @Test
-    @EnabledOnJre(JRE.JAVA_11)
-    void soloJdk11() { }
+        @Test
+        @EnabledOnJre(JRE.JAVA_11)
+        void soloJdk11() { }
 
-    @Test
-    @DisabledOnJre(JRE.JAVA_15)
-    void nuncaJdk15() { }
+        @Test
+        @DisabledOnJre(JRE.JAVA_15)
+        void nuncaJdk15() { }
+    }
 
     @Test
     void imprimirSystemProperties() {
@@ -187,58 +193,68 @@ class CuentaTest {
         envVars.forEach((k,v) -> System.out.println("clave = " + k + " ; valor = " + v));
     }
 
-    @Test
-    @EnabledIfEnvironmentVariable(named = "java.vm.vendor", matches = "Ubuntu")
-    void testOnSystemVariable() { }
+    @Nested
+    class SystemPropertyTest {
+        @Test
+        @EnabledIfEnvironmentVariable(named = "java.vm.vendor", matches = "Ubuntu")
+        void testOnSystemVariable() { }
 
-    @Test
-    @DisabledIfEnvironmentVariable(named = "os.arch", matches = "*.32.*")
-    void nuncaArquitectura32bits() { }
+        @Test
+        @DisabledIfEnvironmentVariable(named = "os.arch", matches = "*.32.*")
+        void nuncaArquitectura32bits() { }
 
-    @Test
-    @EnabledIfSystemProperty(named = "user.name", matches = "roberto")
-    void testUserName() { }
+        @Test
+        @EnabledIfSystemProperty(named = "user.name", matches = "roberto")
+        void testUserName() { }
 
-    @Test
-    @EnabledIfSystemProperty(named = "ENV", matches = "dev")
-    void entornoDev() { }
-
-    @Test
-    @DisabledIfEnvironmentVariable(named = "USERNAME", matches = "roberto")
-    void testUsarname() { }
-
-    @Test
-    @DisabledIfEnvironmentVariable(named = "SHELL", matches = "/bin/bash")
-    void nuncaShellBash() { }
-
-    @Test
-    @EnabledIfEnvironmentVariable(named = "VERO_ENV", matches = "dev")
-    void siempreEnvironmentDev() { }
-
-    @Test
-    @DisabledIfEnvironmentVariable(named = "VERO_ENV", matches = "prod")
-    void nuncaEnvironmentProd() { }
-
-    @Test
-    @DisplayName("** [DEV] saldo de la cuenta corriente **")
-    void testSaldoCuentaDev() {
-
-        boolean esDev = "dev".equals(System.getProperty("ENV"));
-        assumeTrue(esDev); // se ejecuta lo que viene a continuación sólo si se cumple el assume...()
-
-        // GIVEN
-        // THEN
-        assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
-        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
+        @Test
+        @EnabledIfSystemProperty(named = "ENV", matches = "dev")
+        void entornoDev() { }
     }
 
-    @Test
-    @DisplayName("** [DEV] (2) saldo cuenta corriente **")
-    void testSaldoCuentaDev2() {
-        boolean esDev = "dev".equals(System.getProperty("ENV"));
-        assumingThat(esDev, () -> {
+    @Nested
+    class EnvironementVariableTest {
+        @Test
+        @DisabledIfEnvironmentVariable(named = "USERNAME", matches = "roberto")
+        void testUsarname() { }
+
+        @Test
+        @DisabledIfEnvironmentVariable(named = "SHELL", matches = "/bin/bash")
+        void nuncaShellBash() { }
+
+        @Test
+        @EnabledIfEnvironmentVariable(named = "VERO_ENV", matches = "dev")
+        void siempreEnvironmentDev() { }
+
+        @Test
+        @DisabledIfEnvironmentVariable(named = "VERO_ENV", matches = "prod")
+        void nuncaEnvironmentProd() { }
+    }
+
+    @Nested
+    class AssumeIsDevToTestSaldo {
+        @Test
+        @DisplayName("** [DEV] saldo de la cuenta corriente **")
+        void testSaldoCuentaDev() {
+
+            boolean esDev = "dev".equals(System.getProperty("ENV"));
+            assumeTrue(esDev); // se ejecuta lo que viene a continuación sólo si se cumple el assume...()
+
+            // GIVEN
+            // THEN
             assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
             assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
-        });
+        }
+
+        @Test
+        @DisplayName("** [DEV] (2) saldo cuenta corriente **")
+        void testSaldoCuentaDev2() {
+            boolean esDev = "dev".equals(System.getProperty("ENV"));
+            assumingThat(esDev, () -> {
+                assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
+                assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
+            });
+        }
     }
+
 }
