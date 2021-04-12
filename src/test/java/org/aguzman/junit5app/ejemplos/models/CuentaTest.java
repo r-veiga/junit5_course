@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 class CuentaTest {
 
@@ -217,4 +219,26 @@ class CuentaTest {
     @DisabledIfEnvironmentVariable(named = "VERO_ENV", matches = "prod")
     void nuncaEnvironmentProd() { }
 
+    @Test
+    @DisplayName("** [DEV] saldo de la cuenta corriente **")
+    void testSaldoCuentaDev() {
+
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+        assumeTrue(esDev); // se ejecuta lo que viene a continuación sólo si se cumple el assume...()
+
+        // GIVEN
+        // THEN
+        assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
+        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
+    }
+
+    @Test
+    @DisplayName("** [DEV] (2) saldo cuenta corriente **")
+    void testSaldoCuentaDev2() {
+        boolean esDev = "dev".equals(System.getProperty("ENV"));
+        assumingThat(esDev, () -> {
+            assertEquals(1000.12345, cuenta.getSaldo().doubleValue());
+            assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
+        });
+    }
 }
