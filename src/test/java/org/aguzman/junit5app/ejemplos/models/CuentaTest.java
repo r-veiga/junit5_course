@@ -257,4 +257,17 @@ class CuentaTest {
         }
     }
 
+    @DisplayName("** 5 VECES débito **")
+    @RepeatedTest(value=5, name="{displayName} Rep nº {currentRepetition} de {totalRepetitions}")
+    void repeatedTestDebitoCuenta(RepetitionInfo iteracion) {
+        // GIVEN
+        System.out.println("----------- Esta iteración es la número " + iteracion.getCurrentRepetition());
+        // WHEN
+        cuenta.debito(new BigDecimal(100));
+        // THEN
+        assertNotNull(cuenta.getSaldo());
+        assertEquals(900, cuenta.getSaldo().intValue());
+        assertEquals("900.12345", cuenta.getSaldo().toPlainString());
+    }
+
 }
