@@ -18,7 +18,8 @@ class CuentaTest {
         // WHEN
         String real = cuenta.getPersona();
         // THEN
-        assertEquals(esperado, real);
+        assertNotNull(real, () -> ">>> La cuenta no puede ser nula");
+        assertEquals(esperado, real, () -> ">>> El nombre de cuenta no es el que se esperaba");
     }
 
     @Test
@@ -27,7 +28,7 @@ class CuentaTest {
         Cuenta cuenta = new Cuenta("Andrés", new BigDecimal("1000.1234"));
         // THEN
         assertEquals(1000.1234, cuenta.getSaldo().doubleValue());
-        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0);
+        assertFalse(cuenta.getSaldo().compareTo(BigDecimal.ZERO) < 0, () -> ">>> El saldo debe ser mayor de cero.");
     }
 
     @Test
@@ -52,13 +53,14 @@ class CuentaTest {
     }
 
     @Test
-    void testCrebitoCuenta() {
+    void testCreditoCuenta() {
         // GIVEN
         Cuenta cuenta = new Cuenta("Andrés Guzmán", new BigDecimal("1000.12345"));
         // WHEN
         cuenta.credito(new BigDecimal(100));
+        cuenta.setSaldo(null);
         // THEN
-        assertNotNull(cuenta.getSaldo());
+        assertNotNull(cuenta.getSaldo(), ">>> El saldo de la cuenta no puede ser null");
         assertEquals(1100, cuenta.getSaldo().intValue());
         assertEquals("1100.12345", cuenta.getSaldo().toPlainString());
     }
@@ -100,7 +102,7 @@ class CuentaTest {
         banco.addCuenta(cuentaOrigen);
         banco.addCuenta(cuentaDestino);
         assertAll(
-                () -> assertEquals(2, banco.getCuentas().size()),
+                () -> assertEquals(2, banco.getCuentas().size(), () -> ">>> El banco no tiene las cuentas esperadas"),
                 () -> assertEquals("Banco del Estado", cuentaOrigen.getBanco().getNombre()),
                 () -> assertEquals("Andrés Guzmán", banco.getCuentas().stream()
                         .filter(cuenta -> cuenta.getPersona().equals("Andrés Guzmán"))
