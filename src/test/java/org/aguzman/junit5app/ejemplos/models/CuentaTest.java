@@ -82,6 +82,7 @@ class CuentaTest {
     }
 
     @Test
+    @Tag("debito")
     @DisplayName("** débito en cuenta **")
     void testDebitoCuenta() {
         // GIVEN
@@ -264,6 +265,8 @@ class CuentaTest {
         }
     }
 
+    @Tag("repeated")
+    @Tag("debito")
     @DisplayName("** 5 VECES débito **")
     @RepeatedTest(value=5, name="{displayName} Rep nº {currentRepetition} de {totalRepetitions}")
     void repeatedTestDebitoCuenta(RepetitionInfo iteracion) {
@@ -277,6 +280,9 @@ class CuentaTest {
         assertEquals("900.12345", cuenta.getSaldo().toPlainString());
     }
 
+    // En la configuración de ejecución de pruebas en Intellij indico que quiero ejecutar por "Tag" en vez de por clase
+    // e indico el tag que voy a usar
+    @Tag("parameterized")
     @Nested
     class PruebasParametrizadasTest {
 
